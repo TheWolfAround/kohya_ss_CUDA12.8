@@ -42,11 +42,11 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 # Step into GUI local directory
 cd "$SCRIPT_DIR" || exit 1
 
-if [ -d "$SCRIPT_DIR/venv" ]; then
-    source "$SCRIPT_DIR/venv/bin/activate" || exit 1
-else
-    echo "venv folder does not exist. Not activating..."
-fi
+# if [ -d "$SCRIPT_DIR/venv" ]; then
+#     source "$SCRIPT_DIR/venv/bin/activate" || exit 1
+# else
+#     echo "venv folder does not exist. Not activating..."
+# fi
 
 # Check if LD_LIBRARY_PATH environment variable exists
 if [[ -z "${LD_LIBRARY_PATH}" ]]; then
@@ -108,11 +108,11 @@ fi
 #Set STARTUP_CMD as normal python if not specified
 if [[ -z "$STARTUP_CMD" ]]
 then
-    STARTUP_CMD=python
+    STARTUP_CMD=python3.12
 fi
 
 # Validate the requirements and run the script if successful
-if python "$SCRIPT_DIR/setup/validate_requirements.py" -r "$REQUIREMENTS_FILE"; then
+if python3.12 "$SCRIPT_DIR/setup/validate_requirements.py" -r "$REQUIREMENTS_FILE"; then
     "${STARTUP_CMD}" $STARTUP_CMD_ARGS "$SCRIPT_DIR/kohya_gui.py" "$@"
 else
     echo "Validation failed. Exiting..."

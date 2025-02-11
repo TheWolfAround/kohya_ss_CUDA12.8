@@ -17,8 +17,8 @@ def check_python_version():
     Returns:
     bool: True if the current Python version is valid, False otherwise.
     """
-    min_version = (3, 10, 9)
-    max_version = (3, 11, 0)
+    min_version = (3, 11, 0)
+    max_version = (3, 13, 0)
     
     from packaging import version
     
@@ -634,6 +634,9 @@ def process_requirements_line(line, show_stdout: bool = False):
 
 
 def install_requirements(requirements_file, check_no_verify_flag=False, show_stdout: bool = False):
+
+    return
+
     if check_no_verify_flag:
         log.info(f'Verifying modules installation status from {requirements_file}...')
     else:
