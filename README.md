@@ -1,6 +1,6 @@
 # Kohya's GUI
 
-This repository primarily provides a Gradio GUI for [Kohya's Stable Diffusion trainers](https://github.com/kohya-ss/sd-scripts). However, support for Linux OS is also offered through community contributions. macOS support is not optimal at the moment but might work if the conditions are favorable.
+This is a fork from [Kohya's GUI](https://github.com/bmaltais/kohya_ss) focusing Nvidia GPUs. Whole packages updated to run with newer versions of Python, CUDA and Pytorch. Everything is tested on Windows and Linux.
 
 The GUI allows you to set the training parameters and generate and run the required CLI commands to train the model.
 
@@ -8,33 +8,16 @@ The GUI allows you to set the training parameters and generate and run the requi
 
 - [Kohya's GUI](#kohyas-gui)
   - [Table of Contents](#table-of-contents)
-  - [🦒 Colab](#-colab)
   - [Installation](#installation)
     - [Windows](#windows)
       - [Windows Pre-requirements](#windows-pre-requirements)
       - [Setup Windows](#setup-windows)
-      - [Optional: CUDNN 8.9.6.50](#optional-cudnn-89650)
-    - [Linux and macOS](#linux-and-macos)
+    - [Linux](#linux)
       - [Linux Pre-requirements](#linux-pre-requirements)
       - [Setup Linux](#setup-linux)
-      - [Install Location](#install-location)
-    - [Runpod](#runpod)
-      - [Manual installation](#manual-installation)
-      - [Pre-built Runpod template](#pre-built-runpod-template)
-    - [Docker](#docker)
-      - [Get your Docker ready for GPU support](#get-your-docker-ready-for-gpu-support)
-        - [Windows](#windows-1)
-        - [Linux, OSX](#linux-osx)
-      - [Design of our Dockerfile](#design-of-our-dockerfile)
-      - [Use the pre-built Docker image](#use-the-pre-built-docker-image)
-      - [Local docker build](#local-docker-build)
-      - [ashleykleynhans runpod docker builds](#ashleykleynhans-runpod-docker-builds)
-  - [Upgrading](#upgrading)
-    - [Windows Upgrade](#windows-upgrade)
-    - [Linux and macOS Upgrade](#linux-and-macos-upgrade)
   - [Starting GUI Service](#starting-gui-service)
     - [Launching the GUI on Windows](#launching-the-gui-on-windows)
-    - [Launching the GUI on Linux and macOS](#launching-the-gui-on-linux-and-macos)
+    - [Launching the GUI on Linux and macOS](#launching-the-gui-on-linux)
   - [Custom Path Defaults](#custom-path-defaults)
   - [LoRA](#lora)
   - [Sample image generation during training](#sample-image-generation-during-training)
@@ -48,16 +31,6 @@ The GUI allows you to set the training parameters and generate and run the requi
   - [Masked loss](#masked-loss)
   - [Change History](#change-history)
 
-## 🦒 Colab
-
-This Colab notebook was not created or maintained by me; however, it appears to function effectively. The source can be found at: <https://github.com/camenduru/kohya_ss-colab>.
-
-I would like to express my gratitude to camendutu for their valuable contribution. If you encounter any issues with the Colab notebook, please report them on their repository.
-
-| Colab                                                                                                                                                                          | Info               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ |
-| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/kohya_ss-colab/blob/main/kohya_ss_colab.ipynb) | kohya_ss_gui_colab |
-
 ## Installation
 
 ### Windows
@@ -66,263 +39,39 @@ I would like to express my gratitude to camendutu for their valuable contributio
 
 To install the necessary dependencies on a Windows system, follow these steps:
 
-1. Install [Python 3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe).
-   - During the installation process, ensure that you select the option to add Python to the 'PATH' environment variable.
-
-2. Install [CUDA 11.8 toolkit](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows&target_arch=x86_64).
-
-3. Install [Git](https://git-scm.com/download/win).
-
-4. Install the [Visual Studio 2015, 2017, 2019, and 2022 redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).
+1. Install your Nvidia drivers: https://www.nvidia.com/en-us/drivers/
+2. Python version should be greater than 3.11.0 and less then 3.13.0.  
+You can download and install appropriate python version here: https://www.python.org/ftp/python  
+I recommend Python3.12.9: https://www.python.org/ftp/python/3.12.9/python-3.12.9-amd64.exe
 
 #### Setup Windows
 
 To set up the project, follow these steps:
 
-1. Open a terminal and navigate to the desired installation directory.
+1. Run `git clone https://github.com/TheWolfAround/kohya_ss_CUDA12.8.git --recursive`
+2. Change directory `cd kohya_ss_CUDA12.8.`
+3. Run `install_python_dependencies.bat` and wait for the installation to complete.
+4. Run `gui.bat`
 
-2. Clone the repository by running the following command:
-
-   ```shell
-   git clone --recursive https://github.com/bmaltais/kohya_ss.git
-   ```
-
-3. Change into the `kohya_ss` directory:
-
-   ```shell
-   cd kohya_ss
-   ```
-
-4. Run one of the following setup script by executing the following command:
-
-   For systems with only python 3.10.11 installed:
-
-   ```shell
-   .\setup.bat
-   ```
-
-   For systems with only more than one python release installed:
-
-   ```shell
-   .\setup-3.10.bat
-   ```
-
-   During the accelerate config step, use the default values as proposed during the configuration unless you know your hardware demands otherwise. The amount of VRAM on your GPU does not impact the values used.
-
-#### Optional: CUDNN 8.9.6.50
-
-The following steps are optional but will improve the learning speed for owners of NVIDIA 30X0/40X0 GPUs. These steps enable larger training batch sizes and faster training speeds.
-
-1. Run `.\setup.bat` and select `2. (Optional) Install cudnn files (if you want to use the latest supported cudnn version)`.
-
-### Linux and macOS
+### Linux
 
 #### Linux Pre-requirements
 
-To install the necessary dependencies on a Linux system, ensure that you fulfill the following requirements:
-
-- Ensure that `venv` support is pre-installed. You can install it on Ubuntu 22.04 using the command:
-
-  ```shell
-  apt install python3.10-venv
-  ```
-
-- Install the CUDA 11.8 Toolkit by following the instructions provided in [this link](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64).
-
-- Make sure you have Python version 3.10.9 or higher (but lower than 3.11.0) installed on your system.
+1. Install your Nvidia drivers. Installing Nvidia drivers on Linux is a little bit complicated.  
+Watch this video to install Nvidia driver on Linux: https://www.youtube.com/watch?v=mOIzYxVD4d0
+2. Python version should be greater than 3.11.0 and less then 3.13.0.  
+**If your Python version is not in this range**, you can compile appropriate python version from its source code.  
+Watch this video to compile appropriate Python version: https://www.youtube.com/watch?v=RdhmJNDADNc  
+I recommend for you to compile Python3.12.9.
 
 #### Setup Linux
 
-To set up the project on Linux or macOS, perform the following steps:
-
-1. Open a terminal and navigate to the desired installation directory.
-
-2. Clone the repository by running the following command:
-
-   ```shell
-   git clone --recursive https://github.com/bmaltais/kohya_ss.git
-   ```
-
-3. Change into the `kohya_ss` directory:
-
-   ```shell
-   cd kohya_ss
-   ```
-
-4. If you encounter permission issues, make the `setup.sh` script executable by running the following command:
-
-   ```shell
-   chmod +x ./setup.sh
-   ```
-
-5. Run the setup script by executing the following command:
-
-   ```shell
-   ./setup.sh
-   ```
-
-   Note: If you need additional options or information about the runpod environment, you can use `setup.sh -h` or `setup.sh --help` to display the help message.
-
-#### Install Location
-
-The default installation location on Linux is the directory where the script is located. If a previous installation is detected in that location, the setup will proceed there. Otherwise, the installation will fall back to `/opt/kohya_ss`. If `/opt` is not writable, the fallback location will be `$HOME/kohya_ss`. Finally, if none of the previous options are viable, the installation will be performed in the current directory.
-
-For macOS and other non-Linux systems, the installation process will attempt to detect the previous installation directory based on where the script is run. If a previous installation is not found, the default location will be `$HOME/kohya_ss`. You can override this behavior by specifying a custom installation directory using the `-d` or `--dir` option when running the setup script.
-
-If you choose to use the interactive mode, the default values for the accelerate configuration screen will be "This machine," "None," and "No" for the remaining questions. These default answers are the same as the Windows installation.
-
-### Runpod
-
-#### Manual installation
-
-To install the necessary components for Runpod and run kohya_ss, follow these steps:
-
-1. Select the Runpod pytorch 2.0.1 template. This is important. Other templates may not work.
-
-2. SSH into the Runpod.
-
-3. Clone the repository by running the following command:
-
-   ```shell
-   cd /workspace
-   git clone --recursive https://github.com/bmaltais/kohya_ss.git
-   ```
-
-4. Run the setup script:
-
-   ```shell
-   cd kohya_ss
-   ./setup-runpod.sh
-   ```
-
-5. Run the GUI with:
-
-   ```shell
-   ./gui.sh --share --headless
-   ```
-
-   or with this if you expose 7860 directly via the runpod configuration:
-
-   ```shell
-   ./gui.sh --listen=0.0.0.0 --headless
-   ```
-
-6. Connect to the public URL displayed after the installation process is completed.
-
-#### Pre-built Runpod template
-
-To run from a pre-built Runpod template, you can:
-
-1. Open the Runpod template by clicking on <https://runpod.io/gsc?template=ya6013lj5a&ref=w18gds2n>.
-
-2. Deploy the template on the desired host.
-
-3. Once deployed, connect to the Runpod on HTTP 3010 to access the kohya_ss GUI. You can also connect to auto1111 on HTTP 3000.
-
-### Docker
-
-#### Get your Docker ready for GPU support
-
-##### Windows
-
-Once you have installed [**Docker Desktop**](https://www.docker.com/products/docker-desktop/), [**CUDA Toolkit**](https://developer.nvidia.com/cuda-downloads), [**NVIDIA Windows Driver**](https://www.nvidia.com.tw/Download/index.aspx), and ensured that your Docker is running with [**WSL2**](https://docs.docker.com/desktop/wsl/#turn-on-docker-desktop-wsl-2), you are ready to go.
-
-Here is the official documentation for further reference.  
-<https://docs.nvidia.com/cuda/wsl-user-guide/index.html#nvidia-compute-software-support-on-wsl-2>
-<https://docs.docker.com/desktop/wsl/use-wsl/#gpu-support>
-
-##### Linux, OSX
-
-Install an NVIDIA GPU Driver if you do not already have one installed.  
-<https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html>
-
-Install the NVIDIA Container Toolkit with this guide.  
-<https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html>
-
-#### Design of our Dockerfile
-
-- It is required that all training data is stored in the `dataset` subdirectory, which is mounted into the container at `/dataset`.
-- Please note that the file picker functionality is not available. Instead, you will need to manually input the folder path and configuration file path.
-- TensorBoard has been separated from the project.
-  - TensorBoard is not included in the Docker image.
-  - The "Start TensorBoard" button has been hidden.
-  - TensorBoard is launched from a distinct container [as shown here](/docker-compose.yaml#L41).
-- The browser won't be launched automatically. You will need to manually open the browser and navigate to [http://localhost:7860/](http://localhost:7860/) and [http://localhost:6006/](http://localhost:6006/)
-- This Dockerfile has been designed to be easily disposable. You can discard the container at any time and restart it with the new code version.
-
-#### Use the pre-built Docker image
-
-```bash
-git clone --recursive https://github.com/bmaltais/kohya_ss.git
-cd kohya_ss
-docker compose up -d
-```
-
-To update the system, do `docker compose down && docker compose up -d --pull always`
-
-#### Local docker build
-
-> [!IMPORTANT]  
-> Clone the Git repository ***recursively*** to include submodules:  
-> `git clone --recursive https://github.com/bmaltais/kohya_ss.git`
-
-```bash
-git clone --recursive https://github.com/bmaltais/kohya_ss.git
-cd kohya_ss
-docker compose up -d --build
-```
-
-> [!NOTE]  
-> Building the image may take up to 20 minutes to complete.
-
-To update the system, ***checkout to the new code version*** and rebuild using `docker compose down && docker compose up -d --build --pull always`
-
-> If you are running on Linux, an alternative Docker container port with fewer limitations is available [here](https://github.com/P2Enjoy/kohya_ss-docker).
-
-#### ashleykleynhans runpod docker builds
-
-You may want to use the following repositories when running on runpod:
-
-- Standalone Kohya_ss template: <https://github.com/ashleykleynhans/kohya-docker>
-- Auto1111 + Kohya_ss GUI template: <https://github.com/ashleykleynhans/stable-diffusion-docker>
-
-## Upgrading
-
-To upgrade your installation to a new version, follow the instructions below.
-
-### Windows Upgrade
-
-If a new release becomes available, you can upgrade your repository by running the following commands from the root directory of the project:
-
-1. Pull the latest changes from the repository:
-
-   ```powershell
-   git pull
-   ```
-
-2. Run the setup script:
-
-   ```powershell
-   .\setup.bat
-   ```
-
-### Linux and macOS Upgrade
-
-To upgrade your installation on Linux or macOS, follow these steps:
-
-1. Open a terminal and navigate to the root directory of the project.
-
-2. Pull the latest changes from the repository:
-
-   ```bash
-   git pull
-   ```
-
-3. Refresh and update everything:
-
-   ```bash
-   ./setup.sh
-   ```
+1. Run `git clone https://github.com/TheWolfAround/kohya_ss_CUDA12.8.git --recursive`
+2. Change directory `cd kohya_ss_CUDA12.8.`
+3. Make installation script an executable: `chmod +x install_python_dependencies.sh`
+4. Run `./install_python_dependencies.sh` and wait for the installation to complete.
+3. Make GUI script an executable: `chmod +x gui.sh`
+4. Run `gui.bat`
 
 ## Starting GUI Service
 
@@ -340,21 +89,16 @@ To launch the GUI service, you can use the provided scripts or run the `kohya_gu
 
 ### Launching the GUI on Windows
 
-On Windows, you can use either the `gui.ps1` or `gui.bat` script located in the root directory. Choose the script that suits your preference and run it in a terminal, providing the desired command line arguments. Here's an example:
+On Windows, you can use either the `gui.bat` script located in the root directory. Choose the script that suits your preference and run it in a terminal, providing the desired command line arguments. Here's an example:
 
-```powershell
-gui.ps1 --listen 127.0.0.1 --server_port 7860 --inbrowser --share
-```
-
-or
 
 ```powershell
 gui.bat --listen 127.0.0.1 --server_port 7860 --inbrowser --share
 ```
 
-### Launching the GUI on Linux and macOS
+### Launching the GUI on Linux
 
-To launch the GUI on Linux or macOS, run the `gui.sh` script located in the root directory. Provide the desired command line arguments as follows:
+To launch the GUI on Linux run the `./gui.sh` script located in the root directory. Provide the desired command line arguments as follows:
 
 ```bash
 gui.sh --listen 127.0.0.1 --server_port 7860 --inbrowser --share
@@ -413,7 +157,7 @@ If you encounter an X error related to the page file, you may need to increase t
 
 ### No module called tkinter
 
-If you encounter an error indicating that the module `tkinter` is not found, try reinstalling Python 3.10 on your system.
+If you encounter an error indicating that the module `tkinter` is not found, try reinstalling Python on your system.
 
 ### LORA Training on TESLA V100 - GPU Utilization Issue
 

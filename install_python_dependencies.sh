@@ -21,7 +21,7 @@ patch=$(echo $python_version | cut -d'.' -f3)
 if [[ $major -eq 3 && $minor -ge 11 && $minor -lt 13 ]]; then
     echo -e "${GREEN}Python version $python_version is within the acceptable range.${RESET}"
 else
-    echo -e "${RED}Error: Python version $python_version is not within the acceptable range (3.11.0 to 3.13.0).${RESET}"
+    echo -e "${RED}Error: Python version $python_version is not within the acceptable range '3.11.0 to 3.13.0'.${RESET}"
     exit 1
 fi
 
