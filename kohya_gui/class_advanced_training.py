@@ -357,7 +357,7 @@ class AdvancedTraining:
                 info="Values lower than 1000 will make the model more img2img focussed. 1000 = noise only",
             )
 
-        with gr.Row():
+        with gr.Row(equal_height=True):
             self.noise_offset_type = gr.Dropdown(
                 label="Noise offset type",
                 choices=[
@@ -367,71 +367,72 @@ class AdvancedTraining:
                 value=self.config.get("advanced.noise_offset_type", "Original"),
                 scale=1,
             )
-            with gr.Row(visible=True) as self.noise_offset_original:
-                self.noise_offset = gr.Slider(
-                    label="Noise offset",
-                    value=self.config.get("advanced.noise_offset", 0),
-                    minimum=0,
-                    maximum=1,
-                    step=0.01,
-                    info="Recommended values are 0.05 - 0.15",
-                )
-                self.noise_offset_random_strength = gr.Checkbox(
-                    label="Noise offset random strength",
-                    value=self.config.get(
-                        "advanced.noise_offset_random_strength", False
-                    ),
-                    info="Use random strength between 0~noise_offset for noise offset",
-                )
-                self.adaptive_noise_scale = gr.Slider(
-                    label="Adaptive noise scale",
-                    value=self.config.get("advanced.adaptive_noise_scale", 0),
-                    minimum=-1,
-                    maximum=1,
-                    step=0.001,
-                    info="Add `latent mean absolute value * this value` to noise_offset",
-                )
-            with gr.Row(visible=False) as self.noise_offset_multires:
-                self.multires_noise_iterations = gr.Slider(
-                    label="Multires noise iterations",
-                    value=self.config.get("advanced.multires_noise_iterations", 0),
-                    minimum=0,
-                    maximum=64,
-                    step=1,
-                    info="Enable multires noise (recommended values are 6-10)",
-                )
-                self.multires_noise_discount = gr.Slider(
-                    label="Multires noise discount",
-                    value=self.config.get("advanced.multires_noise_discount", 0.3),
-                    minimum=0,
-                    maximum=1,
-                    step=0.01,
-                    info="Recommended values are 0.8. For LoRAs with small datasets, 0.1-0.3",
-                )
-            with gr.Row(visible=True):
-                self.ip_noise_gamma = gr.Slider(
-                    label="IP noise gamma",
-                    value=self.config.get("advanced.ip_noise_gamma", 0),
-                    minimum=0,
-                    maximum=1,
-                    step=0.01,
-                    info="enable input perturbation noise. used for regularization. recommended value: around 0.1",
-                )
-                self.ip_noise_gamma_random_strength = gr.Checkbox(
-                    label="IP noise gamma random strength",
-                    value=self.config.get(
-                        "advanced.ip_noise_gamma_random_strength", False
-                    ),
-                    info="Use random strength between 0~ip_noise_gamma for input perturbation noise",
-                )
-            self.noise_offset_type.change(
-                noise_offset_type_change,
-                inputs=[self.noise_offset_type],
-                outputs=[
-                    self.noise_offset_original,
-                    self.noise_offset_multires,
-                ],
+        with gr.Row(visible=True) as self.noise_offset_original:
+            self.noise_offset = gr.Slider(
+                label="Noise offset",
+                value=self.config.get("advanced.noise_offset", 0),
+                minimum=0,
+                maximum=1,
+                step=0.01,
+                info="Recommended values are 0.05 - 0.15"
             )
+            self.noise_offset_random_strength = gr.Checkbox(
+                label="Noise offset random strength",
+                value=self.config.get(
+                    "advanced.noise_offset_random_strength", False
+                ),
+                info="Use random strength between 0~noise_offset for noise offset",
+            )
+            self.adaptive_noise_scale = gr.Slider(
+                label="Adaptive noise scale",
+                value=self.config.get("advanced.adaptive_noise_scale", 0),
+                minimum=-1,
+                maximum=1,
+                step=0.001,
+                info="Add `latent mean absolute value * this value` to noise_offset",
+            )
+        with gr.Row(visible=False) as self.noise_offset_multires:
+            self.multires_noise_iterations = gr.Slider(
+                label="Multires noise iterations",
+                value=self.config.get("advanced.multires_noise_iterations", 0),
+                minimum=0,
+                maximum=64,
+                step=1,
+                info="Enable multires noise (recommended values are 6-10)",
+            )
+            self.multires_noise_discount = gr.Slider(
+                label="Multires noise discount",
+                value=self.config.get("advanced.multires_noise_discount", 0.3),
+                minimum=0,
+                maximum=1,
+                step=0.01,
+                info="Recommended values are 0.8. For LoRAs with small datasets, 0.1-0.3",
+            )
+        with gr.Row(visible=True):
+            self.ip_noise_gamma = gr.Slider(
+                label="IP noise gamma",
+                value=self.config.get("advanced.ip_noise_gamma", 0),
+                minimum=0,
+                maximum=1,
+                step=0.01,
+                info="enable input perturbation noise. used for regularization. recommended value: around 0.1",
+                scale=2
+            )
+            self.ip_noise_gamma_random_strength = gr.Checkbox(
+                label="IP noise gamma random strength",
+                value=self.config.get(
+                    "advanced.ip_noise_gamma_random_strength", False
+                ),
+                info="Use random strength between 0~ip_noise_gamma for input perturbation noise",
+            )
+        self.noise_offset_type.change(
+            noise_offset_type_change,
+            inputs=[self.noise_offset_type],
+            outputs=[
+                self.noise_offset_original,
+                self.noise_offset_multires,
+            ],
+        )
         with gr.Row():
             self.caption_dropout_every_n_epochs = gr.Number(
                 label="Dropout caption every n epochs",
