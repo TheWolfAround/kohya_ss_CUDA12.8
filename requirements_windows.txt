@@ -1,5 +1,10 @@
-bitsandbytes==0.43.0
-tensorboard
-tensorflow>=2.16.1
+torch==2.6.0 --extra-index-url https://download.pytorch.org/whl/cu126
+torchvision==0.21.0 --extra-index-url https://download.pytorch.org/whl/cu126
+xformers==0.0.29.post3 --extra-index-url https://download.pytorch.org/whl/cu126
+bitsandbytes==0.45.2
+tensorboard==2.18.0
+tensorflow==2.18.0
+wheel
+tensorrt --extra-index-url https://pypi.nvidia.com --use-pep517
 onnxruntime-gpu==1.17.1
 -r requirements.txt

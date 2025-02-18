@@ -1,8 +1,0 @@
-# torch torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu126
-bitsandbytes==0.45.2
-tensorboard==2.18.0
-tensorflow==2.18.0
-wheel
-tensorrt
-onnxruntime-gpu==1.18.1
--r requirements.txt

@@ -1,6 +1,7 @@
 # Python
 venv
 venv2
+virt
 __pycache__
 *.egg-info
 build
