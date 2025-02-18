@@ -46,7 +46,6 @@ if exist "virt" (
 ) else (
     echo %RED%Python Virtual Environment folder does not exist.%RESET%
     echo %RED%Make sure you have run 'install_python_dependencies.bat' first.%RESET%
-    echo %RED%Python Virtual Environment activated.%RESET%
     exit /b 1
 )
 

@@ -32,15 +32,13 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR" || exit 1
 
 if [[ -d "$SCRIPT_DIR/virt" ]]; then
+    echo -e "${YELLOW}Python Virtual Environment folder exist.${RESET}"
     source "$SCRIPT_DIR/virt/bin/activate"
-    echo -e "${GREEN}Python Virtual Environment activated.${RESET}"
+    echo -e "${YELLOW}Python Virtual Environment activated.${RESET}"
 else
-    echo -e "${YELLOW}Python Virtual Environment folder does not exist.${RESET}"
-    echo -e "${YELLOW}Creating a Python Virtual Environment.${RESET}"
-    "$PREFERRED_PYTHON" -m venv "$SCRIPT_DIR/virt"
-    echo -e "${GREEN}Python Virtual Environment created.${RESET}"
-    source "$SCRIPT_DIR/virt/bin/activate"
-    echo -e "${GREEN}Python Virtual Environment activated.${RESET}"
+    echo -e "${RED}Python Virtual Environment folder does not exist.${RESET}"
+    echo -e "${RED}Make sure you have run 'install_python_dependencies.sh' first.${RESET}"
+    exit 1
 fi
 
 # Check if LD_LIBRARY_PATH environment variable exists

@@ -53,7 +53,7 @@ if exist "virt" (
 )
 
 :: Install Python dependencies
-pip install --use-pep517 -r requirements_linux.txt
+pip install --use-pep517 -r requirements_windows.txt
 
 call %cd%\virt\Scripts\deactivate.bat
 echo %YELLOW%Python Virtual Environment deactivated.%RESET%
