@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Set the ANSI escape sequence for yellow text
-YELLOW='\033[0;33m'
-GREEN='\033[0;32m'
-RED='\033[0;31m'
+RED='\033[0;91m'
+GREEN='\033[0;92m'
+YELLOW='\033[0;93m'
 # Set the ANSI escape sequence to reset text color
 RESET='\033[0m'
 

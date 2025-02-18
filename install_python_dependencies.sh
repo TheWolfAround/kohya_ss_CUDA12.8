@@ -47,8 +47,9 @@ done
 SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 
 if [[ -d "$SCRIPT_DIR/virt" ]]; then
+    echo -e "${YELLOW}Python Virtual Environment folder exist.${RESET}"
     source "$SCRIPT_DIR/virt/bin/activate"
-    echo -e "${GREEN}Python Virtual Environment activated.${RESET}"
+    echo -e "${YELLOW}Python Virtual Environment activated.${RESET}"
 else
     echo -e "${YELLOW}Python Virtual Environment folder does not exist.${RESET}"
     echo -e "${YELLOW}Creating a Python Virtual Environment.${RESET}"
