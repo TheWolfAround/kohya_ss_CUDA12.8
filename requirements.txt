@@ -11,7 +11,7 @@ gradio==5.16.0
 huggingface-hub==0.28.1
 imagesize==1.4.1
 lion-pytorch==0.2.3
-lycoris_lora==3.1.1.post1 --use-pep517
+lycoris_lora==3.1.1.post1
 omegaconf==2.3.0
 onnx==1.17.0
 prodigyopt==1.1.1
